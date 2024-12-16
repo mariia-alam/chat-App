@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'normalize.css';
+
+body {
+    font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+
+    /* overflow:hidden; */
+}
+/* NavBar */
+.nav-bar{
+    z-index:20;
+    position:fixed;
+    top:0;
+    font-weight:700;
+    padding:1rem;
+    display:grid;
+    grid-template-columns: repeat(4, 1fr) 5fr;
+    grid-template-rows: repeat(1, 100px);
+    width:100%;
+    height:12%;
+    background: linear-gradient(90deg, rgba(71, 44, 90, 0.55) 32%, rgba(195, 165, 240, 0.8) 100%);
+}
+#nav-profile{
+    margin-right:3rem;
+    align-self:center;
+    justify-self:end;
+    width:3rem;
+    height:3rem;
+}
+#nav-logo{
+    justify-self:center;
+    align-self:center;
+    width:13rem;
+    height:13rem;
+    clip-path: inset(28% 30% 35% 30%);
+}
+.nav-bar a{
+    cursor:pointer;
+    font-size:1.5rem;
+    text-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+    transform: scale(1.05);
+    white-space: nowrap;
+    justify-self:center;
+    align-self:center;
+    color:white;
+    text-decoration: none;
+}
+.nav-bar #mobileDropDown {
+    display:none;
+}
+
+/* NavBar mobile */
+@media (max-width: 768px) {
+
+.nav-bar{
+    padding-top:1rem;
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 80px);
+    width:100%;
+    height:10%;
+    background: linear-gradient(90deg, rgba(71, 44, 90, 0.55) 32%, rgba(195, 165, 240, 0.8) 100%);
+}
+#nav-profile{
+    margin-right:0;
+    align-self:center;
+    justify-self:flex-end;
+    width:2rem;
+    height:2rem;
+}
+#nav-logo{
+    justify-self:start;
+    align-self:center;
+    width:8.5rem;
+    height:8.5rem;
+    clip-path: inset(28% 30% 35% 30%);
+}
+.nav-bar a {
+    display:none;
+}
+.nav-bar #mobileDropDown{
+    width:1.5rem;
+    margin-right:1rem;
+    justify-self:start;
+    align-self:center;
+    display:block;
+}
+.mobile-drop-down {
+    position: absolute;
+    left: 2rem;
+    top: 30%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index:50;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+    width:7rem;
+    height:9rem;
+}
+.nav-bar .mobile-drop-down li {
+    text-align: center;
+    width: 100%;
+    color:black;
+    font-size: 1rem;
+    list-style:none;
+    font-weight:500;
+}
+.nav-bar .mobile-drop-down #middle {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding:0.8rem;
+}
+}
+/* Landing Page */
+
+.landing{
+    padding-top:8rem;
+    background-image: url('./assets/landing.png');
+    background-size: 120%;
+    background-position: right 100% top  ;
+    height: 100vh;
+    width: 100%;
+    font-weight:800;
+    color:white;
+}
+.landing main{
+    padding:5rem;
+    margin-top:1rem;
+    display:flex;
+    flex-direction: column;
+    align-items:flex-start;
+    gap:1rem;
+    font-size:4rem;
+    font-style:italic;
+}
+.landing button{
+    border:none;
+    font-size:1.5rem;
+    font-weight:700;
+    padding:1rem;
+    padding-left:2rem;
+    padding-right:2rem;
+    background-color:white;
+    color: #9759C7;
+    border-radius:0.5rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+.landing{
+    overflow:hidden;
+    background-image: url('./assets/landing.png');
+    background-size: cover;
+    background-position: right 65%  top  ;
+}
+.landing header {
+    height: 10%;
+    width:100%
+}
+
+.header-right {
+
+}
+.header-left {
+}
+.header-left img{
+    width: 90%;
+
+}
+.landing main{
+    margin-top:5rem;
+    padding:1.5rem;
+    font-size:3rem;
+}
+.landing button{
+    padding-left:1rem;
+    padding-right:1rem;
+    border-radius:0.5rem;
+    font-size:1rem;
+}
+}
+
+/* get started page */
+.logo{
+    width:30%;
+    height:35%;
+    background-size: 110%;
+    background-image: url('./assets/logo11.png');
+    background-position: center center ;
+
+}
+.home{
+    padding-top:5rem;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background: #7A54B7;
+    color: white;
+    gap: 1rem;
+    font-size: 1.5rem;
+
+  }
+
+  .home button{
+    color: black;
+    background-color: white;
+    border: none;
+    width: 40%;
+    height: 8%;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 2rem;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+  }
+button:hover {
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+    transform: scale(1.02);
+}
+
+
+@media (max-width: 768px) {
+    .logo{
+    width:40%;
+    height:25%;
+    background-size: 250%;
+
+}
+.home{
+    overflow:hidden;
+    padding-top:5rem;
+
+}
+    .home h1 {
+        font-size: 3rem;
+    }
+
+    .home button {
+        width: 80%;
+        height: auto;
+        padding: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .home p {
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+}
+
+
+/* login signup */
+
+.common {
+    overflow:hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 15rem;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background: #CCCBD6;
+    color: black;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+
+.common h2 {
+    font-weight:700;
+    font-size:2rem;
+}
+
+hr {
+    width:20%;
+    border: none;
+    height: 0.2rem;
+    background: #8764BE;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    gap: 1rem;
+    width: 100%;
+    border: none;
+}
+form input{
+    margin:auto;
+    width:40%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+}
+
+form button {
+    padding: 1rem;
+    background: #8764BE;
+    color: white;
+    border: none;
+    border-radius: 2.5rem;
+    cursor: pointer;
+    width:auto;
+    align-self: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    width:10%;
+}
+@media (max-width: 768px) {
+.common{
+    padding-top:12rem;
+}
+
+    form {
+        width: 150%;
+        gap:1.5rem;
+    }
+
+    form input {
+        width: 50%;
+        font-size: 1rem;
+        padding: 1rem;
+    }
+
+    form button {
+        font-size: 1.2rem;
+        padding: 0.8rem;
+        width:40%;
+    }
+}
+
+
+
+.password{
+    margin:auto;
+    position:relative;
+    width:40%;
+}
+.password input{
+    width:100%;
+}
+.signuppassword{
+    position: absolute;
+    right: 1rem;
+    font-size:1.5rem;
+    /* top: 59%; */
+    transform: translateY(50%);
+    cursor: pointer;
+    color: #888;
+}
+.loginpassword{
+    position: absolute;
+    font-size:1.5rem;
+    right: 1rem;
+    /* top: 54%; */
+    transform: translateY(50%);
+    cursor: pointer;
+    color: #888;
+}
+
+
+@media (max-width: 768px) {
+    .password{
+    position:relative;
+    width:50%;
+}
+.password input{
+    width:100%;
+}
+.signuppassword{
+        right: 1rem;
+        /* top: 56.5%; */
+        font-size:1.5rem;
+            transform: translateY(50%);
+
+}
+.loginpassword{
+        right: 1rem;
+        /* top: 48.2%; */
+        transform: translateY(50%);
+        font-size:1.5rem;
+
+}
+}
+
+.left {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    left: -26px;
+    top: -63px;
+    border-radius: 50%;
+    background: #7A54B7;
+}
+
+.right {
+    position: absolute;
+    width: 410px;
+    height: 410px;
+    right: -90px;
+    top: -63px;
+    border-radius: 50%;
+    background: #8764C2;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    filter: blur(1px);
+}
+.bottom{
+position: absolute;
+width: 312px;
+height: 312px;
+left: -54px;
+top: 700px;
+border-radius: 50%;
+background: #7A54B7;
+}
+.bottom::before {
+content:"";
+position: absolute;
+width: 150px;
+height: 150px;
+left: 310px;
+top: -20px;
+border-radius: 50%;
+background: #8666B8;
+}
+
+
+@media (max-width: 768px) {
+.left {
+    width: 200px;
+    height: 200px;
+    left: -26px;
+    top: -120px;
+}
+
+.right {
+    width: 350px;
+    height: 350px;
+    right: -50px;
+    top: -167px;
+}
+.bottom{
+    width: 150px;
+    height: 150px;
+    left: -10px;
+    top: 700px;
+}
+.bottom::before {
+width: 70px;
+height: 70px;
+left: 130px;
+top: -30px;
+}
+hr {
+    width:50%;
+}
+}
