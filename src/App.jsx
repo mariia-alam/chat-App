@@ -22,7 +22,7 @@ function App() {
       <RoomsProvider>
         <AuthProvider>
           <Router>
-          {location.pathname !== "/" && <SessionManager />}
+          {location.pathname !== "/" || location.pathname !== "/signup" || location.pathname !== "/get-started"  && <SessionManager />}
             <Routes>
               <Route path="/" element={<Landing></Landing>}></Route>
 

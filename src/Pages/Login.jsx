@@ -57,8 +57,16 @@ async function handleSubmit(event){
         }
         else {
             const errorData = await response.json();
+            if (errorData.errMsg === "A user with this email cannot be found") {
+            setError(
+                <>
+                    {errorData.errMsg} <a href="/signup">Create an account</a>
+                </>
+            );
+            } else {
             setError(errorData.errMsg);
-        }
+            }
+    }
     }catch (err) {
         console.error("Error during login:", err);
             setNotificationError(err);
