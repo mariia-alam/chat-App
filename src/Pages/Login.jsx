@@ -35,13 +35,22 @@ async function handleSubmit(event){
         });
         if (response.ok) {
             const responseData = await response.json();
-            console.log("Login successful:", responseData);
+            // console.log("Login successful:", responseData.token);
+            const tokenData = JSON.parse(atob(responseData.token.split('.')[1]));
+            console.log(tokenData);
             //LocalStorage
             localStorage.setItem("authToken", responseData.token);
             authDispatch({
                     type: "LOGIN",
                     payload: {
                         token: responseData.token,
+                        user: {
+                            exp: tokenData.exp,
+                            id: tokenData.id,
+                            profilepic: tokenData.profilepic,
+                            username: tokenData.username,
+                            room: tokenData.rooms.roomId,
+                        },
                     }
                 });
                 navigate("/rooms");
@@ -49,8 +58,6 @@ async function handleSubmit(event){
         else {
             const errorData = await response.json();
             setError(errorData.errMsg);
-            console.log(errorData.errMsg)
-            console.log(error)
         }
     }catch (err) {
         console.error("Error during login:", err);

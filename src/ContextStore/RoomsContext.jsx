@@ -1,5 +1,4 @@
 import { createContext , useReducer } from 'react';
-
 // Reducer for room-related state
 const initialRoomsState = {
     rooms: [],

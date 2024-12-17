@@ -14,15 +14,11 @@ import { NotificationContext } from "../ContextStore/NotificationContext";
 
 
 export default function Rooms(){
-  const { state: authState } = useContext(AuthContext);
+  const { state: authState  , dispatch: authDispatch} = useContext(AuthContext);
   const { state: roomsState , setRooms } = useContext(RoomsContext);
   const {error , setError , success , setSuccess , clearNotification} = useContext(NotificationContext);
 
     const location = useLocation();
-    console.log(authState.token)
-    console.log(authState.user)
-    // console.log(roomsState.rooms)
-    console.log(roomsState.oneRoom)
 
 
 
@@ -57,10 +53,8 @@ export default function Rooms(){
                 const responseData = await response.json();
                 console.log("room created successfully:", responseData);
                 setSuccess(responseData.message);
+                    authDispatch({ type: "UPDATE_MY_ROOM", payload: responseData.room.id });
                 await handleFetchRooms();
-                // setTimeout(async() => {
-                //         await handleFetchRooms();
-                //     }, 1500);
                 }
                 else {
                 const errorData = await response.json();

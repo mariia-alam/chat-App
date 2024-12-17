@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { NotificationContext } from "../ContextStore/NotificationContext";
 
 export default function SessionManager() {
-    const { isTokenExpired, clearToken } = useContext(AuthContext);
+    const {state, isTokenExpired, clearToken } = useContext(AuthContext);
     const { setError } = useContext(NotificationContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isTokenExpired) {
+        if (isTokenExpired && !state.isLoggedOut) {
             setError("Session expired. Please log in again.");
             const timer = setTimeout(() => {
                 clearToken();
@@ -18,7 +18,7 @@ export default function SessionManager() {
 
             return () => clearTimeout(timer);
         }
-    }, [isTokenExpired, clearToken, navigate, setError]);
+    }, [isTokenExpired, clearToken, navigate, setError , state ]);
 
     return null;
 }

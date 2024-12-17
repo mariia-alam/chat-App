@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 
 export default function Room() {
     //context
-    const { state: authState } = useContext(AuthContext);
+    const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
     const { state: roomsState , setRooms, setOneRoom , deleteRoom } = useContext(RoomsContext);
     const {error , setError , success , setSuccess , clearNotification} = useContext(NotificationContext);
 
@@ -177,6 +177,8 @@ useEffect(() => {
                 const responseData = await response.json();
                 deleteRoom(roomId);
                 setSuccess(responseData.message)
+                        authDispatch({ type: "UPDATE_MY_ROOM" , payload:null });
+
                 setTimeout(() => {
                     navigate('/rooms');
                 }, 1500);
@@ -207,6 +209,7 @@ async function handleLeave() {
             if (response.ok) {
                 const responseData = await response.json();
                 setSuccess(responseData.message)
+                authDispatch({ type: "UPDATE_MY_ROOM", payload: null });
                 setTimeout(() => {
                     navigate('/rooms');
                 }, 1500);
@@ -231,7 +234,7 @@ async function handleLeave() {
                 <div className="left-header">
                     <img src={backArrow} onClick={()=>navigate('/rooms')} alt="Back" />
                     <span id="chat-name">{host.username}</span>
-                    {/* <p id="guest-name">{guset?.username || ""}</p> */}
+                    <p id="guest-name">{guset?.username || ""}</p>
 
                 </div>
                 <div onMouseLeave={handleCloseSetting} onMouseEnter={handleOpenSetting}>
@@ -252,7 +255,6 @@ async function handleLeave() {
             <main>
                 {messages.map((message) => {
                     const sender = roomsState.oneRoom.participants.find((user) => user.user.id === message.senderId);
-                    // console.log(sender.user.profilePicture)
                     return (
                         <div key={message.id}
                             className={`message-wrapper ${message.self ? "self" : ""}`}>

@@ -61,8 +61,7 @@ async function handleSubmit(event){
                 if (response.ok) {
                     const responseData = await response.json();
                     console.log("User created successfully:", responseData);
-                    localStorage.setItem("user", JSON.stringify(responseData.user));
-                    authDispatch({ type: "SIGNUP", payload: { user: responseData.user } });
+                    // authDispatch({ type: "SIGNUP", payload: { user: responseData.user } });
                     setSuccess(responseData.msg + " log in to continue")
                     setTimeout(() => {
                         navigate('/login');

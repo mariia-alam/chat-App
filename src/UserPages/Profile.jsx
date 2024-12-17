@@ -17,7 +17,7 @@ export default function Profile() {
     const { error, setError, success, setSuccess, clearNotification } = useContext(NotificationContext);
     const currentUser = authState.user;
 
-    const [profilePic, setProfilePic] = useState(`http://localhost:3000/${currentUser.profilePicture}`);
+    const [profilePic, setProfilePic] = useState(`http://localhost:3000/${currentUser.profilepic}`);
     const [selectedFile, setSelectedFile] = useState(null);
 
     useEffect(() => {
@@ -54,12 +54,9 @@ export default function Profile() {
                 setSuccess(data.message);
                 console.log(data);
                 setProfilePic(`http://localhost:3000/${data.user.profilePicture}`);
-                let currentUser = JSON.parse(localStorage.getItem("user"));
-                currentUser.profilePicture = `${data.user.profilePicture}`;
-                localStorage.setItem("user", JSON.stringify(currentUser));
                 authDispatch({
                     type: "UPDATE_PROFILE_PICTURE",
-                    payload: { profilePicture: currentUser.profilePicture },
+                    payload: data.user.profilePicture,
                 });
             } else {
                 const errorData = await response.json();
