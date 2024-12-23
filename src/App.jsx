@@ -10,7 +10,7 @@ import Profile from './UserPages/Profile';
 import Room from './UserPages/Room';
 import  RoomsProvider  from './ContextStore/RoomsContext';
 import { AuthProvider } from './ContextStore/AuthContext';
-import SessionManager from './Component/SessionManager';
+// import SessionManager from './Component/SessionManager';
 import PublicRoute from './Component/PublicRoute';
 import { NotificationProvider } from './ContextStore/NotificationContext';
 import PrivateRoute from './Component/PrivateRoute';
@@ -22,7 +22,6 @@ function App() {
       <RoomsProvider>
         <AuthProvider>
           <Router>
-          {location.pathname !== "/" || location.pathname !== "/signup" || location.pathname !== "/get-started"  && <SessionManager />}
             <Routes>
               <Route path="/" element={<Landing></Landing>}></Route>
 

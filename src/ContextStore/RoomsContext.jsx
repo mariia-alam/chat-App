@@ -1,5 +1,6 @@
 import { createContext , useReducer } from 'react';
 // Reducer for room-related state
+
 const initialRoomsState = {
     rooms: [],
     oneRoom:{
@@ -15,8 +16,6 @@ const roomsReducer = (state, action) => {
         return { ...state, rooms: action.payload };
         case "DELETE_ROOM":
         return { ...state, rooms: state.rooms.filter((room) => room.id !== action.payload) };
-        case "CREATE_ROOM":
-        return { ...state, rooms: [...state.rooms, action.payload.room] };
         case "GET_ONE_ROOM":
         return {
         ...state,
@@ -47,7 +46,7 @@ export  default function RoomsProvider({ children }) {
     });
     }
 
-        function deleteRoom(roomId) {
+    function deleteRoom(roomId) {
         dispatch({ type: "DELETE_ROOM", payload: roomId });
     }
     return (

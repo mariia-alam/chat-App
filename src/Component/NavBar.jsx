@@ -12,9 +12,12 @@ export default function NavBar(){
     const { state: authState, dispatch: authDispatch ,clearToken } = useContext(AuthContext);
     const { error, setError , success, setSuccess , clearNotification } = useContext(NotificationContext);
     const { state: roomsState , setRooms , setOneRoom } = useContext(RoomsContext);
-const roomId = authState?.user?.room
-    ? String(authState.user.room)
-    : null;
+
+    //get room id
+        const roomId = authState?.user?.rooms?.[0]?.id
+            ? String(authState.user?.rooms?.[0]?.id)
+            : null;
+
 
         const navigate = useNavigate();
         const location = useLocation();
@@ -81,8 +84,6 @@ async function handleGetRoom() {
                 return;
             }else{
             const data = await response.json();
-            // console.log("get one room:", data);//room userRole participants
-            // console.log("get one room:", data.participants);//room userRole participants
             setOneRoom(data.room, data.userRole, data.participants);
             navigate(`/room/${roomId}`);
             }
@@ -99,20 +100,24 @@ async function handleGetRoom() {
 
 
     return(
-        <div className='nav-bar'>
-            <img id='nav-logo' src={logo} alt="" />
-            <img onClick={handleOpenDropDown} id='mobileDropDown' src={mobileDropDown} alt="" />
+        <div className='nav-bar'> 
+            <div>
+                <img id='nav-logo' src={logo} alt="" />
+                <img onClick={handleOpenDropDown} id='mobileDropDown' src={mobileDropDown} alt="" />
                 {dropdownVisible && (
                         <div className="mobile-drop-down">
                                         <li onClick={handleRoomsClick}>Rooms</li>
-                                        <li onClick={handleProfileClick} id='middle'>Profile</li>
+                                        <li onClick={handleProfileClick}>Profile</li>
                                         <li onClick={handleGetRoom}>My Room</li>
+                                        <li onClick={handleLogout} id='last'>Logout</li>
+
                         </div>)
                 }
-            <a onClick={handleRoomsClick}>Rooms</a>
-            <a onClick={handleProfileClick}>Profile</a>
-            <a onClick={handleGetRoom}>My Room</a>
-            <a onClick={handleLogout}>Logout</a>
+                <a onClick={handleRoomsClick}>Rooms</a>
+                <a onClick={handleProfileClick}>Profile</a>
+                <a onClick={handleGetRoom}>My Room</a>
+                <a onClick={handleLogout}>Logout</a>
+            </div>
             <img  id='nav-profile' src={profile} alt="" />
             {error && <Error message={error}/>}
         </div>

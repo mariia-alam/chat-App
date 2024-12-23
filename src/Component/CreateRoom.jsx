@@ -7,7 +7,7 @@ import { useContext , useEffect } from 'react';
 import { NotificationContext } from '../ContextStore/NotificationContext';
 import { RoomsContext } from '../ContextStore/RoomsContext';
 export default function CreateRoom({ name, date, roomId, pic }) {
-    const { state: authState , dispatch:authDispatch } = useContext(AuthContext);
+    const { state: authState , dispatch:authDispatch  } = useContext(AuthContext);
     const { state: roomsState , setRooms, setOneRoom } = useContext(RoomsContext);
     const {error , setError , success , setSuccess , clearNotification} = useContext(NotificationContext);
     const navigate = useNavigate()
@@ -37,9 +37,9 @@ export default function CreateRoom({ name, date, roomId, pic }) {
                 setError(errorData.message);
             }else{
             const data = await response.json();
-            // console.log("Joined room:", data);
-            // console.log("Joined room:", data.room);
-            authDispatch({ type: "UPDATE_MY_ROOM", payload: data.room.id });
+            console.log("Joined room:", data);
+            authDispatch({ type: "UPDATE_MY_ROOM", payload: [data.room] });
+
             setSuccess(data.message)
             setTimeout(() => {
                     handleGetRoom();
@@ -68,7 +68,7 @@ export default function CreateRoom({ name, date, roomId, pic }) {
                 return;
             }else{
             const data = await response.json();
-            // console.log("get one room:", data);//room userRole participants
+            console.log("get one room:", data);//room userRole participants
             // console.log("get one room:", data.participants);//room userRole participants
             setOneRoom(data.room, data.userRole, data.participants);
             navigate(`/room/${roomId}`);

@@ -1,30 +1,21 @@
 /* eslint-disable react/prop-types */
-import { createContext, useReducer } from "react";
-import { useMemo } from "react";
+import { createContext, useReducer, useEffect } from "react";
 const token =localStorage.getItem("authToken");
 let tokenData = null;
 
 if (token) {
     try {
-        tokenData = JSON.parse(atob(token.split('.')[1]));
-        // console.log(tokenData)
+        tokenData = JSON.parse(atob(token?.split('.')[1]));
+        console.log("token data",tokenData)
     } catch (error) {
         console.error("Invalid token format", error);
     }
 }
 // Initial state
 const initialAppState = {
-    user: tokenData
-        ? {
-            exp: tokenData.exp,
-            id: tokenData.id,
-            profilepic: tokenData.profilepic || null,
-            username: tokenData.username || null,
-            room: tokenData.rooms.roomId,
-        }
-        : {},
+    user: {},
     token: token || null,
-        isLoggedOut: false,
+    isLoggedOut: false,
 };
 
 // Reducer function to manage sign-up state
@@ -33,20 +24,22 @@ const appReducer = (state, action) => {
         // case "SIGNUP":
             // return { ...state, user: action.payload.user };
         case "LOGIN":
-            return { ...state, token: action.payload.token, isLoggedOut:false , user:action.payload.user};
+            return { ...state, token: action.payload.token, isLoggedOut:false};
+        case "GET_USER":
+            return { ...state, user: action.payload.user};
         case "SESSION_EXPIRED":
-            return { ...state, token: null };
+            return { ...state, token: null, user:null };
         case "LOGOUT":
             return { ...state, token: null, user:null, isLoggedOut:true };
         case "UPDATE_PROFILE_PICTURE":
         return {
             ...state,
-            user: {...state.user , profilepic: action.payload },
+            user: {...state.user , profilePicture: action.payload },
         };
         case "UPDATE_MY_ROOM":
         return {
             ...state,
-            user: {...state.user , room: action.payload },
+            user: {...state.user , rooms: action.payload },
         };
         default:
             return state;
@@ -59,24 +52,63 @@ const AuthContext = createContext();
 // Context provider for sign-up
 export function AuthProvider({ children }){
     const [state, dispatch] = useReducer(appReducer, initialAppState);
-console.log("user" ,state.user)
-console.log("token",state.token)
 
-const isTokenExpired = useMemo(() => {
-    if (state.token) {
+    console.log("user" ,state.user)
+    // console.log("token",state.token)
+
+
+function isTokenExpired (){
+    if (state.token && tokenData) {
         const currentTime = Date.now() / 1000;
-        return tokenData?.user?.exp < currentTime;
+        console.log(tokenData.exp < currentTime)
+        return tokenData.exp < currentTime;
     }
-    return true;
+    // return true;
+}
+
+
+
+
+function clearToken() {
+        dispatch({ type: "SESSION_EXPIRED" });
+        localStorage.removeItem("authToken");
+    }
+
+
+async function handleGetUser(){
+        try {
+            const response = await fetch("http://localhost:3000/profile", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${state.token}`,
+                },
+            });
+            if (response.ok) {
+                const responseData = await response.json();
+                // console.log("fetching user" , responseData)
+                dispatch({
+                        type: "GET_USER",
+                        payload: {
+                            user: responseData,
+                            },
+                        })
+                } else {
+                const errorData = await response.json();
+            console.error("Error fetching user data:", errorData.message);
+            }
+        } catch (err) {
+            console.error("Error fetching user data:", err);
+        }
+    }
+
+useEffect(() => {
+    if (state.token) {
+        handleGetUser();
+    }
 }, [state.token]);
 
 
-    function clearToken() {
-        localStorage.removeItem("authToken");
-        dispatch({ type: "SESSION_EXPIRED" });
-    }
-
-    return (
+return (
         <AuthContext.Provider value={{state , dispatch , clearToken , isTokenExpired}}>
             {children}
         </AuthContext.Provider>

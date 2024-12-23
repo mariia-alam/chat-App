@@ -9,13 +9,13 @@ export default function SessionManager() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isTokenExpired && !state.isLoggedOut) {
+        if (isTokenExpired() && state.token) {
+            console.log(isTokenExpired())
             setError("Session expired. Please log in again.");
             const timer = setTimeout(() => {
                 clearToken();
                 navigate("/login");
             }, 1500);
-
             return () => clearTimeout(timer);
         }
     }, [isTokenExpired, clearToken, navigate, setError , state ]);

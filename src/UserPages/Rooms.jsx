@@ -11,13 +11,14 @@ import { useContext } from "react";
 import NavBar from "../Component/NavBar";
 import Success from '../Component/Success'
 import { NotificationContext } from "../ContextStore/NotificationContext";
+import io from "socket.io-client";
+const socket = io("http://localhost:3000");
 
 
 export default function Rooms(){
-  const { state: authState  , dispatch: authDispatch} = useContext(AuthContext);
-  const { state: roomsState , setRooms } = useContext(RoomsContext);
-  const {error , setError , success , setSuccess , clearNotification} = useContext(NotificationContext);
-
+    const { state: authState  , dispatch: authDispatch } = useContext(AuthContext);
+    const { state: roomsState , setRooms } = useContext(RoomsContext);
+    const {error , setError , success , setSuccess , clearNotification} = useContext(NotificationContext);
     const location = useLocation();
 
 
@@ -53,7 +54,7 @@ export default function Rooms(){
                 const responseData = await response.json();
                 console.log("room created successfully:", responseData);
                 setSuccess(responseData.message);
-                    authDispatch({ type: "UPDATE_MY_ROOM", payload: responseData.room.id });
+                authDispatch({ type: "UPDATE_MY_ROOM", payload: [responseData.room]});
                 await handleFetchRooms();
                 }
                 else {
@@ -70,6 +71,18 @@ export default function Rooms(){
         Swal.close();
     }
 }
+
+   useEffect(() => {
+        socket.on("rooms", (data) => {
+            if (data.action === "get") {
+                setRooms(data.rooms);
+            }
+        });
+
+        return () => {
+            socket.off("rooms");
+        };
+    }, [setRooms]);
 
 
     async function handleFetchRooms(){

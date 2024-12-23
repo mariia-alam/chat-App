@@ -30,7 +30,7 @@ clearNotification()
                 <NavBar></NavBar>
             <main>
                 <p>Connect, Chat, and<br/>Discover:<br/>Your New Friends<br/>Await</p>
-                <button onClick={handleGetStartedClick} className='get-started'>Get Started</button>
+                <button onClick={handleGetStartedClick}>Get Started</button>
             </main>
         </div>
         </>

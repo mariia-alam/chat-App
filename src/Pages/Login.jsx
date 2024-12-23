@@ -35,24 +35,17 @@ async function handleSubmit(event){
         });
         if (response.ok) {
             const responseData = await response.json();
-            // console.log("Login successful:", responseData.token);
+            console.log("Login successful:", responseData);
             const tokenData = JSON.parse(atob(responseData.token.split('.')[1]));
-            console.log(tokenData);
+            console.log("token data",tokenData);
             //LocalStorage
             localStorage.setItem("authToken", responseData.token);
             authDispatch({
-                    type: "LOGIN",
-                    payload: {
-                        token: responseData.token,
-                        user: {
-                            exp: tokenData.exp,
-                            id: tokenData.id,
-                            profilepic: tokenData.profilepic,
-                            username: tokenData.username,
-                            room: tokenData.rooms.roomId,
-                        },
-                    }
-                });
+                        type: "LOGIN",
+                        payload: {
+                            token: responseData.token
+                            },
+                        });
                 navigate("/rooms");
         }
         else {
@@ -76,6 +69,13 @@ async function handleSubmit(event){
 useEffect(() => {
     clearNotification()
 }, [location, clearNotification]);
+
+
+
+
+
+
+
 
     return(
         <div className="common">
@@ -103,7 +103,6 @@ useEffect(() => {
                 <button>Login</button>
             </form>
             {notificationError && <Error message={notificationError}/>}
-
         </div>
     );
 }

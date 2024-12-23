@@ -12,12 +12,9 @@ import { NotificationContext } from '../ContextStore/NotificationContext';
 export default function Profile() {
     const navigate = useNavigate();
     const location = useLocation();
-
-    const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
+    const { state: authState, dispatch: authDispatch  } = useContext(AuthContext);
     const { error, setError, success, setSuccess, clearNotification } = useContext(NotificationContext);
-    const currentUser = authState.user;
-
-    const [profilePic, setProfilePic] = useState(`http://localhost:3000/${currentUser.profilepic}`);
+    const [profilePic, setProfilePic] = useState(`http://localhost:3000/${authState.user?.profilePicture}`);
     const [selectedFile, setSelectedFile] = useState(null);
 
     useEffect(() => {
@@ -51,8 +48,8 @@ export default function Profile() {
             });
             if (response.ok) {
                 const data = await response.json();
-                setSuccess(data.message);
-                console.log(data);
+                setSuccess(data.message)
+                console.log(data.user);
                 setProfilePic(`http://localhost:3000/${data.user.profilePicture}`);
                 authDispatch({
                     type: "UPDATE_PROFILE_PICTURE",
@@ -67,6 +64,12 @@ export default function Profile() {
             setError(error.message);
         }
     }
+
+useEffect(() => {
+        if (authState.user.profilePicture) {
+            setProfilePic(`http://localhost:3000/${authState.user.profilePicture}`);
+        }
+    }, [authState.user]);
 
     return (
         <>

@@ -18,10 +18,9 @@ import { useParams } from "react-router-dom";
 
 export default function Room() {
     //context
-    const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
+    const { state: authState, dispatch: authDispatch  } = useContext(AuthContext);
     const { state: roomsState , setRooms, setOneRoom , deleteRoom } = useContext(RoomsContext);
     const {error , setError , success , setSuccess , clearNotification} = useContext(NotificationContext);
-
     //host
     const host = roomsState.oneRoom?.participants?.find(item => item.role === "host")?.user || null;
     //guset
@@ -42,7 +41,32 @@ export default function Room() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [messages, setMessages] = useState([]);
 
+    //fetch room details
+async function handleGetRoom() {
+        try {
+            const response = await fetch(`http://localhost:3000/room/${authState.user.rooms[0].id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authState.token}`,
+                },
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error get room:", errorData.errMsg);
+                return;
+            }else{
+            const data = await response.json();
+            setOneRoom(data.room, data.userRole, data.participants);
+            }
+        } catch (error) {
+            console.error("Error:", error.errMsg);
+        }
+    }
 
+useEffect(() => {
+    handleGetRoom();
+}, [authState.user.rooms]);
 
     // Clear notifications on location change
     useEffect(() => {
@@ -85,7 +109,9 @@ export default function Room() {
                     roomid: roomsState.oneRoom.room.id,
                     userid: roomsState.oneRoom.userRole.userId,
                     message: newMessage,
+    username: data.data.sender.username,
                 });
+                console.log(data.data.sender.username)
                     setNewMessage("");
             }else{
                 const errorData = await response.json();
@@ -107,7 +133,7 @@ export default function Room() {
             const sender = roomsState.oneRoom.participants.find((user) => user.user.id === data.message.senderId);
             setMessages((prevMessages) => [
                 ...prevMessages,
-                { id: data.message.id, text: data.message.message, self: isSelf,
+                { username: data.message.sender.username , id: data.message.id, text: data.message.message, self: isSelf,
                     avatar: sender?.user?.profilePicture && `http://localhost:3000/${sender.user.profilePicture}`
                 },
             ]);
@@ -133,11 +159,14 @@ useEffect(() => {
             );
             if (response.ok) {
                 const data = await response.json();
+                console.log(data);
                 const formattedMessages = data.messages.map((msg) => ({
+                    username:msg.sender.username,
                     id: msg.id,
                     text: msg.message,
                     senderId: msg.senderId,
                     self: msg.senderId === authState.user.id,
+                    profile:msg.sender.profilePicture,
                 })).sort((a, b) => a.id - b.id);
                 setMessages(formattedMessages);
             }
@@ -177,8 +206,7 @@ useEffect(() => {
                 const responseData = await response.json();
                 deleteRoom(roomId);
                 setSuccess(responseData.message)
-                        authDispatch({ type: "UPDATE_MY_ROOM" , payload:null });
-
+                authDispatch({ type: "UPDATE_MY_ROOM" , payload:null });
                 setTimeout(() => {
                     navigate('/rooms');
                 }, 1500);
@@ -210,6 +238,7 @@ async function handleLeave() {
                 const responseData = await response.json();
                 setSuccess(responseData.message)
                 authDispatch({ type: "UPDATE_MY_ROOM", payload: null });
+
                 setTimeout(() => {
                     navigate('/rooms');
                 }, 1500);
@@ -225,15 +254,17 @@ async function handleLeave() {
     }
 }
 
-
+if (!roomsState.oneRoom || !roomsState.oneRoom.participants) {
+    return <div>Loading...</div>; // أو أي رسالة أو مكون انتظار
+}
 
     return (
         <div  className="chatting">
             <NavBar></NavBar>
             <header>
                 <div className="left-header">
-                    <img src={backArrow} onClick={()=>navigate('/rooms')} alt="Back" />
-                    <span id="chat-name">{host.username}</span>
+                    <img src={backArrow} onClick={()=>navigate(-1)} alt="Back" />
+                    <span id="chat-name">{host?.username}</span>
                     <p id="guest-name">{guset?.username || ""}</p>
 
                 </div>
@@ -254,23 +285,24 @@ async function handleLeave() {
             </header>
             <main>
                 {messages.map((message) => {
-                    const sender = roomsState.oneRoom.participants.find((user) => user.user.id === message.senderId);
                     return (
                         <div key={message.id}
                             className={`message-wrapper ${message.self ? "self" : ""}`}>
                             {message.self && (<>
-                                    <img src={message.avatar || sender?.user?.profilePicture && `http://localhost:3000/${sender.user.profilePicture}` } alt="User Avatar" className="avatar" />
-                                    <div className="message self">
-                                    {message.text}
+                                    <img src={message.avatar || `http://localhost:3000/${message.profile}` } alt="User Avatar" className="avatar" />
+                                    <div className="message-content">
+                                        <span className="username">{message.username}</span>
+                                        <div className="message self">{message.text}</div>
                                     </div>
                                     </>
                             )}
                             {!message.self && (<>
-                                    <img src={message.avatar || sender?.user?.profilePicture && `http://localhost:3000/${sender.user.profilePicture}`|| "http://localhost:3000/uploads/user.jpg" } alt="User Avatar" className="avatar" />
-                                    <div className="message rec">
-                                    {message.text}
+                                    <img src={message.avatar ||  `http://localhost:3000/${message.profile}`|| "http://localhost:3000/uploads/user.jpg" } alt="User Avatar" className="avatar" />
+                                    <div className="message-content">
+                                        <span className="username">{message.username}</span>
+                                        <div className="message self">{message.text}</div>
                                     </div>
-                                    </>
+                                </>
                             )}
                         </div>
                     );
